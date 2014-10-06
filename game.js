@@ -71,6 +71,40 @@ function centerText(context, text, offsetX, offsetY) {
 	context.fillText(text, x, y);
 }
 
+// function getXDistance(entity, otherEntity) {
+// 	var xDistance = otherEntity.x - entity.x;
+// 	return xDistance;
+
+// }
+
+function getCenter(entity) {
+	var centerX = entity.x + (entity.width / 2);
+	var centerY = entity.y + (entity.height / 2);
+	return {
+		x: centerX,
+		y: centerY
+	};
+}
+
+function makeRay(entity, otherEntity) {
+	var ray = {
+		startX: entity.x,
+		startY: entity.y,
+		endX: otherEntity.x,
+		endY: otherEntity.y
+	};
+	return ray;
+}
+
+function drawLine(context, ray, width, color) {
+	context.strokeStyle = color;
+	context.lineWidth = width;
+	context.beginPath();
+	context.moveTo(ray.startX, ray.startY);
+	context.lineTo(ray.endX, ray.endY);
+	context.stroke();
+}
+
 // x, y, width, height
 var floorObsticles = [
 	new Splat.Entity(568, 0, 20, canvas.height)
@@ -191,6 +225,10 @@ game.scenes.add("game", new Splat.Scene(canvas, function() {
 		game.animations.get("theher").move();
 
 
+		this.ray = makeRay(getCenter(this.player), getCenter(this.theHer));
+
+
+
 	},
 	function(context) {
 		// draw
@@ -206,7 +244,7 @@ game.scenes.add("game", new Splat.Scene(canvas, function() {
 		// for (var i = 0; i < floorObsticles.length; i++) {
 		// 	context.strokeRect(floorObsticles[i].x, floorObsticles[i].y, floorObsticles[i].width, floorObsticles[i].height);
 		// }
-
+		drawLine(context, this.ray, 1, "rgba(255,255,255,.5)");
 
 	}));
 
