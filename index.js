@@ -23,6 +23,16 @@ var manifest = {
 			"frames": 2,
 			"msPerFrame": 400
 		},
+		"player-walk-left": {
+			"strip": "img/player-walk-left.png",
+			"frames": 2,
+			"msPerFrame": 400
+		},
+		"player-walk-right": {
+			"strip": "img/player-walk-right.png",
+			"frames": 2,
+			"msPerFrame": 400
+		},
 		"theher": {
 			"strip": "img/theher.png",
 			"frames": 1,
@@ -92,6 +102,8 @@ game.scenes.add("game", new Splat.Scene(canvas, function() {
 		//player
 		this.playerIdle = game.animations.get("player");
 		this.playerWalkDown = game.animations.get("player-walk-down");
+		this.playerWalkLeft = game.animations.get("player-walk-left");
+		this.playerWalkRight = game.animations.get("player-walk-right");
 		this.player = new Splat.AnimatedEntity(10, 10, this.playerIdle.width, this.playerIdle.height, this.playerIdle, 0, 0);
 		this.player.state = "ice";
 
@@ -106,28 +118,41 @@ game.scenes.add("game", new Splat.Scene(canvas, function() {
 
 		//Player
 		this.playerWalkDown.move(elapsedMillis);
+		this.playerWalkLeft.move(elapsedMillis);
+		this.playerWalkRight.move(elapsedMillis);
 		if (game.keyboard.isPressed("left") || game.keyboard.isPressed("a")) {
 			this.player.vx = -playerXSpeed;
 			this.player.vy = 0;
 			playerMoving = true;
+			this.player.facing = "left";
 		} else if (game.keyboard.isPressed("right") || game.keyboard.isPressed("d")) {
 			this.player.vx = playerXSpeed;
 			this.player.vy = 0;
 			playerMoving = true;
+			this.player.facing = "right";
 		} else if (game.keyboard.isPressed("up") || game.keyboard.isPressed("w")) {
 			this.player.vy = -playerYSpeed;
 			this.player.vx = 0;
 			playerMoving = true;
+			this.player.facing = "up";
 		} else if (game.keyboard.isPressed("down") || game.keyboard.isPressed("s")) {
 			this.player.vy = playerYSpeed;
 			this.player.vx = 0;
 			playerMoving = true;
+			this.player.facing = "down";
 		} else {
 			playerMoving = false;
 		}
 
 		if (playerMoving) {
-			this.player.sprite = this.playerWalkDown;
+			if (this.player.facing === "left") {
+				this.player.sprite = this.playerWalkLeft;
+			} else if (this.player.facing === "right") {
+				this.player.sprite = this.playerWalkRight;
+			} else {
+				this.player.sprite = this.playerWalkDown;
+			}
+
 			this.player.x += this.player.vx;
 			this.player.y += this.player.vy;
 		} else {
